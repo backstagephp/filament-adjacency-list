@@ -49,133 +49,12 @@ AdjacencyList::make('subjects')
     ->maxDepth(2)               // defaults to -1 (unlimited depth)
 ```
 
-### Customizing the `MaxDepth` of the tree.
-```php
-AdjacencyList::make('subjects')
-    ->maxDepth(2)               // defaults to -1 (unlimited depth)
-```
-
 ### Creating items without a modal.
 ```php
 AdjacencyList::make('subjects')
     ->modal(false)      // defaults to true
 ```
-## Relationships
-In this example, we'll be creating a Ticketing system, where tickets can be assigned to a department, and departments have subjects.
 
-### Building the relationship
-```php
-// App/Models/Department.php
-
-class Department extends Model
-{
-    public function subjects(): HasMany
-    {
-        return $this->hasMany(Subject::class)->whereNull('parent_id')->with('children')->orderBy('sort');
-    }
-}
-```
-
-```php
-// App/Models/Subject.php
-
-class Subject extends Model
-{
-    protected $fillable ['parent_id', 'name', 'sort']; // or whatever your columns are
-
-    public function children(): HasMany
-    {
-        return $this->hasMany(Subject::class, 'parent_id')->with('children')->orderBy('sort');
-    }
-}
-```
-
-Now you've created a nested relationship between departments and subjects.
-
-### Using the relationship
-```php
-// App/Filament/Resources/DepartmentResource.php
-
-AdjacencyList::make('subjects')
-    ->relationship('subjects')          // Define the relationship
-    ->labelKey('name')                  // Customize the label key to your model's column
-    ->childrenKey('children')           // Customize the children key to the relationship's method name
-    ->form([                            // Define the form
-        Forms\Components\TextInput::make('name')
-            ->label(__('Name'))
-            ->required(),
-    ]);
-```
-
-That's it! Now you're able to manage your adjacency lists using relationships.
-
-### Working with Staudenmeir's Laravel Adjacency List
-This package also supports [Staudenmeir's Laravel Adjacency List](https://github.com/staudenmeir/laravel-adjacency-list) package.
-
-First, install the package:
-```bash
-composer require staudenmeir/laravel-adjacency-list:"^1.0"
-```
-
-1. Use the `HasRecursiveRelationships` trait in your model, and override the default path separator.
-
-```php
-// App/Models/Department.php
-
-class Department extends Model
-{
-    use \Staudenmeir\LaravelAdjacencyList\Eloquent\HasRecursiveRelationships;
-
-    public function getPathSeparator()
-    {
-        return '.children.';
-    }
-}
-```
-
-If you're already using the HasRecursiveRelationships trait for other parts of your application, it's probably not a good idea to change your model's path separator, since it can break other parts of your application. Instead, you can add as many path separators as you want:
-
-```php
-class Department extends Model
-{
-    use \Staudenmeir\LaravelAdjacencyList\Eloquent\HasRecursiveRelationships;
-
-    public function getCustomPaths()
-    {
-        return [
-            [
-                'name' => 'tree_path',
-                'column' => 'id',
-                'separator' => '.children.',
-            ],
-        ];
-    }
-}
-```
-
-2. Use the `relationship` method to define the relationship:
-
-```php
-AdjacencyList::make('subdepartments')
-    ->relationship('descendants')   // or 'descendantsAndSelf', 'children' ...
-    ->customPath('tree_path')       // if you're using custom paths
-```
-
-That's it! Now you're able to manage your adjacency lists using relationships.
-
-### Customizing the query
-```php
-AdjacencyList::make('subdepartments')
-    ->relationship('descendants', fn (Builder $query): Builder => $query->where('enabled', 1))
-```
-
-### Ordering
-If your application needs to order the items in the list, you can use the `orderColumn` method:
-
-```php
-AdjacencyList::make('subdepartments')
-    ->orderColumn('sort')   // or any other column
-```
 ### Disabling creation, edition, deletion, and reordering.
 ```php
 AdjacencyList::make('subjects')
@@ -313,6 +192,146 @@ If your application needs to order the items in the list, you can use the `order
 AdjacencyList::make('subdepartments')
     ->orderColumn('sort')   // or any other column
 ```
+<<<<<<< HEAD
+### Disabling creation, edition, deletion, and reordering.
+```php
+AdjacencyList::make('subjects')
+    ->addable(false)
+    ->editable(false)
+    ->deletable(false)
+    ->reorderable(false)
+```
+
+### Customizing actions
+```php
+use Filament\Forms\Actions\Action;
+
+AdjacencyList::make('subjects')
+    ->addAction(fn (Action $action): Action => $action->icon('heroicon-o-plus')->color('primary'))
+    ->addChildAction(fn (Action $action): Action => $action->button())
+    ->editAction(fn (Action $action): Action => $action->icon('heroicon-o-pencil'))
+    ->deleteAction(fn (Action $action): Action => $action->requiresConfirmation())
+    ->reorderAction(fn (Action $action): Action => $action->icon('heroicon-o-arrow-path-rounded-square'))
+```
+
+## Relationships
+In this example, we'll be creating a Ticketing system, where tickets can be assigned to a department, and departments have subjects.
+
+### Building the relationship
+```php
+// App/Models/Department.php
+
+class Department extends Model
+{
+    public function subjects(): HasMany
+    {
+        return $this->hasMany(Subject::class)->whereNull('parent_id')->with('children')->orderBy('sort');
+    }
+}
+```
+
+```php
+// App/Models/Subject.php
+
+class Subject extends Model
+{
+    protected $fillable ['parent_id', 'name', 'sort']; // or whatever your columns are
+
+    public function children(): HasMany
+    {
+        return $this->hasMany(Subject::class, 'parent_id')->with('children')->orderBy('sort');
+    }
+}
+```
+
+Now you've created a nested relationship between departments and subjects.
+
+### Using the relationship
+```php
+// App/Filament/Resources/DepartmentResource.php
+
+AdjacencyList::make('subjects')
+    ->relationship('subjects')          // Define the relationship
+    ->labelKey('name')                  // Customize the label key to your model's column
+    ->childrenKey('children')           // Customize the children key to the relationship's method name
+    ->form([                            // Define the form
+        Forms\Components\TextInput::make('name')
+            ->label(__('Name'))
+            ->required(),
+    ]);
+```
+
+That's it! Now you're able to manage your adjacency lists using relationships.
+
+### Working with Staudenmeir's Laravel Adjacency List
+This package also supports [Staudenmeir's Laravel Adjacency List](https://github.com/staudenmeir/laravel-adjacency-list) package.
+
+First, install the package:
+```bash
+composer require staudenmeir/laravel-adjacency-list:"^1.0"
+```
+
+1. Use the `HasRecursiveRelationships` trait in your model, and override the default path separator.
+
+```php
+// App/Models/Department.php
+
+class Department extends Model
+{
+    use \Staudenmeir\LaravelAdjacencyList\Eloquent\HasRecursiveRelationships;
+
+    public function getPathSeparator()
+    {
+        return '.children.';
+    }
+}
+```
+
+If you're already using the HasRecursiveRelationships trait for other parts of your application, it's probably not a good idea to change your model's path separator, since it can break other parts of your application. Instead, you can add as many path separators as you want:
+
+```php
+class Department extends Model
+{
+    use \Staudenmeir\LaravelAdjacencyList\Eloquent\HasRecursiveRelationships;
+
+    public function getCustomPaths()
+    {
+        return [
+            [
+                'name' => 'tree_path',
+                'column' => 'id',
+                'separator' => '.children.',
+            ],
+        ];
+    }
+}
+```
+
+2. Use the `relationship` method to define the relationship:
+
+```php
+AdjacencyList::make('subdepartments')
+    ->relationship('descendants')   // or 'descendantsAndSelf', 'children' ...
+    ->customPath('tree_path')       // if you're using custom paths
+```
+
+That's it! Now you're able to manage your adjacency lists using relationships.
+
+### Customizing the query
+```php
+AdjacencyList::make('subdepartments')
+    ->relationship('descendants', fn (Builder $query): Builder => $query->where('enabled', 1))
+```
+
+### Ordering
+If your application needs to order the items in the list, you can use the `orderColumn` method:
+
+```php
+AdjacencyList::make('subdepartments')
+    ->orderColumn('sort')   // or any other column
+```
+=======
+>>>>>>> 0da7b82 (Update README.md)
 
 ## Changelog
 
