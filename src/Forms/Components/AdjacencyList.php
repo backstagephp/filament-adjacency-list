@@ -11,6 +11,7 @@ class AdjacencyList extends Forms\Components\Field
 {
     use Concerns\HasActions;
     use Concerns\HasForm;
+    use Concerns\HasRelationship;
 
     protected string $view = 'filament-adjacency-list::builder';
 
