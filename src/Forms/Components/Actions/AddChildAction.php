@@ -10,6 +10,8 @@ use Saade\FilamentAdjacencyList\Forms\Components\AdjacencyList;
 
 class AddChildAction extends Action
 {
+    use \Filament\Actions\Concerns\CanCustomizeProcess;
+    
     public static function getDefaultName(): ?string
     {
         return 'addChild';

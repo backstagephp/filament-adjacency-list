@@ -8,6 +8,8 @@ use Saade\FilamentAdjacencyList\Forms\Components\AdjacencyList;
 
 class ReorderAction extends Action
 {
+    use \Filament\Actions\Concerns\CanCustomizeProcess;
+    
     public static function getDefaultName(): ?string
     {
         return 'reorder';
