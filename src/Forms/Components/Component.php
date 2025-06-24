@@ -2,16 +2,20 @@
 
 namespace Saade\FilamentAdjacencyList\Forms\Components;
 
+use Filament\Forms\Components\Field;
+use Saade\FilamentAdjacencyList\Forms\Components\Concerns\HasActions;
+use Saade\FilamentAdjacencyList\Forms\Components\Concerns\HasForm;
+use Filament\Schemas\Components\Concerns\CanBeCollapsed;
 use Closure;
 use Filament\Forms;
 use Illuminate\Support\Str;
 use Saade\FilamentAdjacencyList\Forms\Components\Actions\Action;
 
-abstract class Component extends Forms\Components\Field
+abstract class Component extends Field
 {
-    use Concerns\HasActions;
-    use Concerns\HasForm;
-    use Forms\Components\Concerns\CanBeCollapsed;
+    use HasActions;
+    use HasForm;
+    use CanBeCollapsed;
 
     protected string $view = 'filament-adjacency-list::builder';
 

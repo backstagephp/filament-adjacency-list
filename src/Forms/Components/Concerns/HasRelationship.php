@@ -2,6 +2,7 @@
 
 namespace Saade\FilamentAdjacencyList\Forms\Components\Concerns;
 
+use Exception;
 use Closure;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
@@ -299,7 +300,7 @@ trait HasRelationship
 
         if ($model = $this->getModelInstance()) {
             if (! in_array(HasRecursiveRelationships::class, class_uses($model))) {
-                throw new \Exception('The model ' . $model::class . ' must use the ' . HasRecursiveRelationships::class . ' trait.');
+                throw new Exception('The model ' . $model::class . ' must use the ' . HasRecursiveRelationships::class . ' trait.');
             }
         }
 

@@ -2,6 +2,16 @@
 
 namespace Saade\FilamentAdjacencyList\Forms\Components\Concerns;
 
+use Saade\FilamentAdjacencyList\Forms\Components\Actions\Action;
+use Saade\FilamentAdjacencyList\Forms\Components\Actions\AddAction;
+use Saade\FilamentAdjacencyList\Forms\Components\Actions\AddChildAction;
+use Saade\FilamentAdjacencyList\Forms\Components\Actions\DeleteAction;
+use Saade\FilamentAdjacencyList\Forms\Components\Actions\EditAction;
+use Saade\FilamentAdjacencyList\Forms\Components\Actions\ReorderAction;
+use Saade\FilamentAdjacencyList\Forms\Components\Actions\IndentAction;
+use Saade\FilamentAdjacencyList\Forms\Components\Actions\DedentAction;
+use Saade\FilamentAdjacencyList\Forms\Components\Actions\MoveUpAction;
+use Saade\FilamentAdjacencyList\Forms\Components\Actions\MoveDownAction;
 use Closure;
 use Saade\FilamentAdjacencyList\Forms\Components\Actions;
 
@@ -37,9 +47,9 @@ trait HasActions
 
     protected ?Closure $modifyMoveDownActionUsing = null;
 
-    public function getAddAction(): Actions\Action
+    public function getAddAction(): Action
     {
-        $action = Actions\AddAction::make();
+        $action = AddAction::make();
 
         if ($this->modifyAddActionUsing) {
             $action = $this->evaluate($this->modifyAddActionUsing, [
@@ -57,9 +67,9 @@ trait HasActions
         return $this;
     }
 
-    public function getAddChildAction(): Actions\Action
+    public function getAddChildAction(): Action
     {
-        $action = Actions\AddChildAction::make();
+        $action = AddChildAction::make();
 
         if ($this->modifyAddChildActionUsing) {
             $action = $this->evaluate($this->modifyAddChildActionUsing, [
@@ -77,9 +87,9 @@ trait HasActions
         return $this;
     }
 
-    public function getDeleteAction(): Actions\Action
+    public function getDeleteAction(): Action
     {
-        $action = Actions\DeleteAction::make();
+        $action = DeleteAction::make();
 
         if ($this->modifydeleteActionUsing) {
             $action = $this->evaluate($this->modifydeleteActionUsing, [
@@ -97,9 +107,9 @@ trait HasActions
         return $this;
     }
 
-    public function getEditAction(): Actions\Action
+    public function getEditAction(): Action
     {
-        $action = Actions\EditAction::make();
+        $action = EditAction::make();
 
         if ($this->modifyEditActionUsing) {
             $action = $this->evaluate($this->modifyEditActionUsing, [
@@ -117,9 +127,9 @@ trait HasActions
         return $this;
     }
 
-    public function getReorderAction(): Actions\Action
+    public function getReorderAction(): Action
     {
-        $action = Actions\ReorderAction::make();
+        $action = ReorderAction::make();
 
         if ($this->modifyReorderActionUsing) {
             $action = $this->evaluate($this->modifyReorderActionUsing, [
@@ -142,9 +152,9 @@ trait HasActions
         return $this;
     }
 
-    public function getIndentAction(): Actions\Action
+    public function getIndentAction(): Action
     {
-        $action = Actions\IndentAction::make();
+        $action = IndentAction::make();
 
         if ($this->modifyIndentActionUsing) {
             $action = $this->evaluate($this->modifyIndentActionUsing, [
@@ -162,9 +172,9 @@ trait HasActions
         return $this;
     }
 
-    public function getDedentAction(): Actions\Action
+    public function getDedentAction(): Action
     {
-        $action = Actions\DedentAction::make();
+        $action = DedentAction::make();
 
         if ($this->modifyDedentActionUsing) {
             $action = $this->evaluate($this->modifyDedentActionUsing, [
@@ -182,9 +192,9 @@ trait HasActions
         return $this;
     }
 
-    public function getMoveUpAction(): Actions\Action
+    public function getMoveUpAction(): Action
     {
-        $action = Actions\MoveUpAction::make();
+        $action = MoveUpAction::make();
 
         if ($this->modifyMoveUpActionUsing) {
             $action = $this->evaluate($this->modifyMoveUpActionUsing, [
@@ -202,9 +212,9 @@ trait HasActions
         return $this;
     }
 
-    public function getMoveDownAction(): Actions\Action
+    public function getMoveDownAction(): Action
     {
-        $action = Actions\MoveDownAction::make();
+        $action = MoveDownAction::make();
 
         if ($this->modifyMoveDownActionUsing) {
             $action = $this->evaluate($this->modifyMoveDownActionUsing, [

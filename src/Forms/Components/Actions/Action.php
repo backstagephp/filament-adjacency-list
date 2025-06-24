@@ -3,9 +3,8 @@
 namespace Saade\FilamentAdjacencyList\Forms\Components\Actions;
 
 use Filament\Actions\Concerns\CanCustomizeProcess;
-use Filament\Forms\Components\Actions\Action as BaseAction;
 
-abstract class Action extends BaseAction
+abstract class Action extends \Filament\Actions\Action
 {
     use CanCustomizeProcess;
 }

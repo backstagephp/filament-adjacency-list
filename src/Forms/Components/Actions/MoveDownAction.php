@@ -2,7 +2,7 @@
 
 namespace Saade\FilamentAdjacencyList\Forms\Components\Actions;
 
-use Filament\Support\Enums\ActionSize;
+use Filament\Support\Enums\Size;
 use Illuminate\Support\Str;
 use Saade\FilamentAdjacencyList\Forms\Components\Component;
 
@@ -21,7 +21,7 @@ class MoveDownAction extends Action
 
         $this->label(fn (): string => __('filament-adjacency-list::adjacency-list.actions.moveDown.label'));
 
-        $this->size(ActionSize::ExtraSmall);
+        $this->size(Size::ExtraSmall);
 
         $this->action(
             function (Component $component, array $arguments): void {

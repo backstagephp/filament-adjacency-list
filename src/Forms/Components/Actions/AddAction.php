@@ -2,8 +2,8 @@
 
 namespace Saade\FilamentAdjacencyList\Forms\Components\Actions;
 
-use Filament\Forms\Form;
-use Filament\Support\Enums\ActionSize;
+use Filament\Support\Enums\Size;
+use Filament\Schemas\Schema;
 use Illuminate\Support\Str;
 use Saade\FilamentAdjacencyList\Forms\Components\Component;
 
@@ -22,7 +22,7 @@ class AddAction extends Action
 
         $this->label(fn (): string => __('filament-adjacency-list::adjacency-list.actions.add.label'));
 
-        $this->size(ActionSize::Small);
+        $this->size(Size::Small);
 
         $this->modalHeading(
             fn (Component $component): ?string => match ($component->hasModal()) {
@@ -39,18 +39,18 @@ class AddAction extends Action
         );
 
         $this->form(
-            function (Component $component, Form $form): ?Form {
+            function (Component $component, Schema $schema): ?Schema {
                 if (! $component->hasModal()) {
                     return null;
                 }
 
-                $form = $component->getForm($form);
+                $schema = $component->getForm($schema);
 
                 if ($model = $component->getRelatedModel()) {
-                    $form->model($model);
+                    $schema->model($model);
                 }
 
-                return $form;
+                return $schema;
             }
         );
 

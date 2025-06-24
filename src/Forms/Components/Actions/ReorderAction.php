@@ -2,7 +2,7 @@
 
 namespace Saade\FilamentAdjacencyList\Forms\Components\Actions;
 
-use Filament\Support\Enums\ActionSize;
+use Filament\Support\Enums\Size;
 use Saade\FilamentAdjacencyList\Forms\Components\Component;
 
 class ReorderAction extends Action
@@ -22,7 +22,7 @@ class ReorderAction extends Action
 
         $this->livewireClickHandlerEnabled(false);
 
-        $this->size(ActionSize::ExtraSmall);
+        $this->size(Size::ExtraSmall);
 
         $this->visible(
             fn (Component $component): bool => $component->isReorderable()
