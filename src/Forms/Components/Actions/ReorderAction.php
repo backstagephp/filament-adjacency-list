@@ -2,14 +2,11 @@
 
 namespace Saade\FilamentAdjacencyList\Forms\Components\Actions;
 
-use Filament\Forms\Components\Actions\Action;
 use Filament\Support\Enums\ActionSize;
-use Saade\FilamentAdjacencyList\Forms\Components\AdjacencyList;
+use Saade\FilamentAdjacencyList\Forms\Components\Component;
 
 class ReorderAction extends Action
 {
-    use \Filament\Actions\Concerns\CanCustomizeProcess;
-    
     public static function getDefaultName(): ?string
     {
         return 'reorder';
@@ -25,12 +22,10 @@ class ReorderAction extends Action
 
         $this->livewireClickHandlerEnabled(false);
 
-        $this->extraAttributes(['data-sortable-handle' => 'true']);
-
-        $this->size(ActionSize::Small);
+        $this->size(ActionSize::ExtraSmall);
 
         $this->visible(
-            fn (AdjacencyList $component): bool => $component->isReorderable()
+            fn (Component $component): bool => $component->isReorderable()
         );
     }
 }

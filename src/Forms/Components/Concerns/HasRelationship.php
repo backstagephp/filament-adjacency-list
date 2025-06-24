@@ -8,10 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Arr;
-use Saade\FilamentAdjacencyList\Forms\Components\Actions\AddAction;
-use Saade\FilamentAdjacencyList\Forms\Components\Actions\AddChildAction;
-use Saade\FilamentAdjacencyList\Forms\Components\Actions\DeleteAction;
-use Saade\FilamentAdjacencyList\Forms\Components\Actions\EditAction;
+use Saade\FilamentAdjacencyList\Forms\Components\Actions\Action;
 use Saade\FilamentAdjacencyList\Forms\Components\AdjacencyList;
 use Saade\FilamentAdjacencyList\Forms\Components\Component;
 use Staudenmeir\LaravelAdjacencyList\Eloquent\HasRecursiveRelationships;
@@ -96,7 +93,7 @@ trait HasRelationship
             $component->fillFromRelationship();
         });
 
-        $this->addAction(function (AddAction $action): void {
+        $this->addAction(function (Action $action): void {
             $action->using(function (Component $component, array $data): void {
                 $relationship = $component->getRelationship();
                 $model = $component->getRelatedModel();
@@ -138,7 +135,7 @@ trait HasRelationship
             });
         });
 
-        $this->addChildAction(function (AddChildAction $action): void {
+        $this->addChildAction(function (Action $action): void {
             $action->using(function (Component $component, Model $parentRecord, array $data, array $arguments): void {
                 $relationship = $component->getRelationship();
                 $model = $component->getRelatedModel();
@@ -189,7 +186,7 @@ trait HasRelationship
             });
         });
 
-        $this->editAction(function (EditAction $action): void {
+        $this->editAction(function (Action $action): void {
             $action->using(function (Component $component, Model $record, array $data): void {
                 $relationship = $component->getRelationship();
 
@@ -222,7 +219,7 @@ trait HasRelationship
             });
         });
 
-        $this->deleteAction(function (DeleteAction $action): void {
+        $this->deleteAction(function (Action $action): void {
             $action->using(function (Component $component, Model $record): void {
                 $relationship = $component->getRelationship();
 
