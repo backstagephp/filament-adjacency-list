@@ -6,6 +6,8 @@ use Filament\Forms\Components\Field;
 use Saade\FilamentAdjacencyList\Forms\Components\Concerns\HasActions;
 use Saade\FilamentAdjacencyList\Forms\Components\Concerns\HasForm;
 use Filament\Schemas\Components\Concerns\CanBeCollapsed;
+use Filament\Support\Components\Attributes\ExposedLivewireMethod;
+use Livewire\Attributes\Renderless;
 use Closure;
 use Livewire\Attributes\On;
 use Illuminate\Support\Str;
@@ -52,19 +54,20 @@ abstract class Component extends Field
         ]);
     }
 
-    #[On('builder::sort')]
-    public function builderSort(Component $component, string $targetStatePath, array $targetItemsStatePaths)
+    #[ExposedLivewireMethod]
+    #[Renderless]
+    public function builderSort(string $targetStatePath, array $targetItemsStatePaths)
     {
-        if (! str_starts_with($targetStatePath, $component->getStatePath())) {
+        if (! str_starts_with($targetStatePath, $this->getStatePath())) {
             return;
         }
 
-        $state = $component->getState();
-        $relativeStatePath = $component->getRelativeStatePath($targetStatePath);
+        $state = $this->getState();
+        $relativeStatePath = $this->getRelativeStatePath($targetStatePath);
 
         $items = [];
         foreach ($targetItemsStatePaths as $targetItemStatePath) {
-            $targetItemRelativeStatePath = $component->getRelativeStatePath($targetItemStatePath);
+            $targetItemRelativeStatePath = $this->getRelativeStatePath($targetItemStatePath);
 
             $item = data_get($state, $targetItemRelativeStatePath);
             $uuid = Str::afterLast($targetItemRelativeStatePath, '.');
@@ -78,7 +81,31 @@ abstract class Component extends Field
             data_set($state, $relativeStatePath, $items);
         }
 
-        $component->state($state);
+        $this->state($state);
+    }
+
+
+    public function removeUploadedFile(string $fileKey): string | TemporaryUploadedFile | null
+    {
+        $files = $this->getRawState();
+        $file = $files[$fileKey] ?? null;
+
+        if (! $file) {
+            return null;
+        }
+
+        if (is_string($file)) {
+            $this->removeStoredFileName($file);
+        } elseif ($file instanceof TemporaryUploadedFile) {
+            $file->delete();
+        }
+
+        unset($files[$fileKey]);
+
+        $this->rawState($files);
+        $this->callAfterStateUpdated();
+
+        return $file;
     }
 
     public function labelKey(string | Closure $key): static

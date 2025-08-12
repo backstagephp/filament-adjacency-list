@@ -21,6 +21,7 @@
         $isIndentable = $isIndentable();
         $isMoveable = $isMoveable();
         $isReorderable = $isReorderable();
+        $key = $getKey();
         
         $maxDepth = $getMaxDepth();
         
@@ -37,6 +38,7 @@
         x-data="adjacencyList({
             treeId: @js($treeId),
             statePath: @js($getStatePath()),
+            key: @js($key),
             disabled: @js($isDisabled),
             maxDepth: @js($maxDepth)
         })"

@@ -3,6 +3,7 @@ import Sortable from "sortablejs"
 export default function adjacencyList({
     treeId,
     statePath,
+    key,
     disabled,
     maxDepth
 }) {
@@ -26,7 +27,10 @@ export default function adjacencyList({
                     }
                 },
                 onSort: () => {
-                    this.$dispatch('builder::sort', this.statePath, this.sortable.toArray())
+                    this.$wire.callSchemaComponentMethod(key, 'builderSort', {
+                        targetStatePath: this.statePath,
+                        targetItemsStatePaths: this.sortable.toArray()
+                    })
                 }
             })
         },
