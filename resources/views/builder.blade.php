@@ -3,7 +3,6 @@
     :id="$getId()"
     :label="$getLabel()"
     :label-sr-only="$isLabelHidden()"
-    :helper-text="$getHelperText()"
     :hint="$getHint()"
     :hint-icon="$getHintIcon()"
     :required="$isRequired()"
@@ -32,9 +31,9 @@
     <div
         class="fi-adjacency-list-tree"
         data-sortable-container
-        ax-load
-        ax-load-css="{{ \Filament\Support\Facades\FilamentAsset::getStyleHref('filament-adjacency-list-styles', 'saade/filament-adjacency-list') }}"
-        ax-load-src="{{ \Filament\Support\Facades\FilamentAsset::getAlpineComponentSrc('filament-adjacency-list', 'saade/filament-adjacency-list') }}"
+        x-load
+        x-load-css="[@js(\Filament\Support\Facades\FilamentAsset::getStyleHref('filament-adjacency-list-styles', package: 'saade/filament-adjacency-list'))]"
+        x-load-src="{{ \Filament\Support\Facades\FilamentAsset::getAlpineComponentSrc('filament-adjacency-list', 'saade/filament-adjacency-list') }}"
         x-data="adjacencyList({
             treeId: @js($treeId),
             statePath: @js($getStatePath()),

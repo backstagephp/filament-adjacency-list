@@ -52,7 +52,7 @@ class FilamentAdjacencyListServiceProvider extends PackageServiceProvider
     {
         return [
             AlpineComponent::make('filament-adjacency-list', __DIR__ . '/../resources/dist/filament-adjacency-list.js'),
-            Css::make('filament-adjacency-list-styles', __DIR__ . '/../resources/dist/filament-adjacency-list.css'),
+            Css::make('filament-adjacency-list-styles', __DIR__ . '/../resources/dist/filament-adjacency-list.css')->loadedOnRequest(),
         ];
     }
 }

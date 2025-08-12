@@ -8,6 +8,7 @@ use Saade\FilamentAdjacencyList\Forms\Components\Concerns\HasForm;
 use Filament\Schemas\Components\Concerns\CanBeCollapsed;
 use Closure;
 use Filament\Forms;
+use Livewire\Attributes\On;
 use Illuminate\Support\Str;
 use Saade\FilamentAdjacencyList\Forms\Components\Actions\Action;
 
@@ -50,37 +51,36 @@ abstract class Component extends Field
             fn (Component $component): Action => $component->getMoveUpAction(),
             fn (Component $component): Action => $component->getMoveDownAction(),
         ]);
+    }
 
-        $this->registerListeners([
-            'builder::sort' => [
-                static function (Component $component, string $targetStatePath, array $targetItemsStatePaths) {
-                    if (! str_starts_with($targetStatePath, $component->getStatePath())) {
-                        return;
-                    }
+    #[On('builder::sort')] 
+    public function builderSort (Component $component, string $targetStatePath, array $targetItemsStatePaths) {
+        logger()->debug('hier');
+        dd($component);
+        if (! str_starts_with($targetStatePath, $component->getStatePath())) {
+            return;
+        }
 
-                    $state = $component->getState();
-                    $relativeStatePath = $component->getRelativeStatePath($targetStatePath);
+        $state = $component->getState();
+        $relativeStatePath = $component->getRelativeStatePath($targetStatePath);
 
-                    $items = [];
-                    foreach ($targetItemsStatePaths as $targetItemStatePath) {
-                        $targetItemRelativeStatePath = $component->getRelativeStatePath($targetItemStatePath);
+        $items = [];
+        foreach ($targetItemsStatePaths as $targetItemStatePath) {
+            $targetItemRelativeStatePath = $component->getRelativeStatePath($targetItemStatePath);
 
-                        $item = data_get($state, $targetItemRelativeStatePath);
-                        $uuid = Str::afterLast($targetItemRelativeStatePath, '.');
+            $item = data_get($state, $targetItemRelativeStatePath);
+            $uuid = Str::afterLast($targetItemRelativeStatePath, '.');
 
-                        $items[$uuid] = $item;
-                    }
+            $items[$uuid] = $item;
+        }
 
-                    if (! $relativeStatePath) {
-                        $state = $items;
-                    } else {
-                        data_set($state, $relativeStatePath, $items);
-                    }
+        if (! $relativeStatePath) {
+            $state = $items;
+        } else {
+            data_set($state, $relativeStatePath, $items);
+        }
 
-                    $component->state($state);
-                },
-            ],
-        ]);
+        $component->state($state);
     }
 
     public function labelKey(string | Closure $key): static
