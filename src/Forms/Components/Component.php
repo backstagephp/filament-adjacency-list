@@ -7,7 +7,6 @@ use Saade\FilamentAdjacencyList\Forms\Components\Concerns\HasActions;
 use Saade\FilamentAdjacencyList\Forms\Components\Concerns\HasForm;
 use Filament\Schemas\Components\Concerns\CanBeCollapsed;
 use Closure;
-use Filament\Forms;
 use Livewire\Attributes\On;
 use Illuminate\Support\Str;
 use Saade\FilamentAdjacencyList\Forms\Components\Actions\Action;
@@ -41,22 +40,21 @@ abstract class Component extends Field
         $this->default([]);
 
         $this->registerActions([
-            fn (Component $component): Action => $component->getAddAction(),
-            fn (Component $component): Action => $component->getAddChildAction(),
-            fn (Component $component): Action => $component->getDeleteAction(),
-            fn (Component $component): Action => $component->getEditAction(),
-            fn (Component $component): Action => $component->getReorderAction(),
-            fn (Component $component): Action => $component->getIndentAction(),
-            fn (Component $component): Action => $component->getDedentAction(),
-            fn (Component $component): Action => $component->getMoveUpAction(),
-            fn (Component $component): Action => $component->getMoveDownAction(),
+            fn(Component $component): Action => $component->getAddAction(),
+            fn(Component $component): Action => $component->getAddChildAction(),
+            fn(Component $component): Action => $component->getDeleteAction(),
+            fn(Component $component): Action => $component->getEditAction(),
+            fn(Component $component): Action => $component->getReorderAction(),
+            fn(Component $component): Action => $component->getIndentAction(),
+            fn(Component $component): Action => $component->getDedentAction(),
+            fn(Component $component): Action => $component->getMoveUpAction(),
+            fn(Component $component): Action => $component->getMoveDownAction(),
         ]);
     }
 
-    #[On('builder::sort')] 
-    public function builderSort (Component $component, string $targetStatePath, array $targetItemsStatePaths) {
-        logger()->debug('hier');
-        dd($component);
+    #[On('builder::sort')]
+    public function builderSort(Component $component, string $targetStatePath, array $targetItemsStatePaths)
+    {
         if (! str_starts_with($targetStatePath, $component->getStatePath())) {
             return;
         }

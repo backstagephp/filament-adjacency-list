@@ -26,7 +26,6 @@ export default function adjacencyList({
                     }
                 },
                 onSort: () => {
-                    console.log(this, this.$dispatch, this.$wire);
                     this.$dispatch('builder::sort', this.statePath, this.sortable.toArray())
                 }
             })
