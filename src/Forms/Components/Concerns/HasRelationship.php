@@ -59,6 +59,23 @@ trait HasRelationship
                 $traverse = function (array $item, string $itemKey, array $siblings = []) use (&$traverse, &$cachedExistingRecords, $state, $relationship, $childrenKey, $recordKeyName, $orderColumn, $pivotAttributes): Model {
                     $record = $cachedExistingRecords->get($itemKey);
 
+                    // Handle new records that don't exist in cache yet
+                    if ($record === null) {
+                        $model = $relationship->getRelated();
+                        $record = new $model();
+                        $record->fill($item);
+                        
+                        // Save the new record and add it to cache
+                        if ($relationship instanceof BelongsToMany) {
+                            $record->save();
+                            $relationship->attach($record, $pivotAttributes);
+                        } else {
+                            $relationship->save($record);
+                        }
+                        
+                        $cachedExistingRecords->put($itemKey, $record);
+                    }
+
                     /* Update item order */
                     if ($orderColumn) {
                         $record->{$orderColumn} = $pivotAttributes[$orderColumn] = array_search($itemKey, array_keys($siblings ?: $state));
