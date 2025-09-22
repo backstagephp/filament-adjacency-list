@@ -56,7 +56,7 @@ trait HasRelationship
 
             Arr::map(
                 $state,
-                $traverse = function (array $item, string $itemKey, array $siblings = []) use (&$traverse, &$cachedExistingRecords, $state, $relationship, $childrenKey, $recordKeyName, $orderColumn, $pivotAttributes): Model {
+                $traverse = function (array $item, string $itemKey, array $siblings = [], ?Model $parentRecord = null) use (&$traverse, &$cachedExistingRecords, $state, $relationship, $childrenKey, $recordKeyName, $orderColumn, $pivotAttributes): Model {
                     $record = $cachedExistingRecords->get($itemKey);
 
                     // Handle new records that don't exist in cache yet
@@ -81,6 +81,29 @@ trait HasRelationship
                         $record->{$orderColumn} = $pivotAttributes[$orderColumn] = array_search($itemKey, array_keys($siblings ?: $state));
                     }
 
+                    // If using adjacency list (HasMany) and the current item has no parent in the new state,
+                    // ensure the parent reference is set to NULL so it becomes a root item.
+                    if (! ($relationship instanceof BelongsToMany)) {
+                        // We infer the parent column from the children relationship's foreign key name (e.g., 'parent_id').
+                        // This works because the parent column on the current record is the same column.
+                        try {
+                            $childrenRelation = method_exists($record, $childrenKey) ? $record->{$childrenKey}() : null;
+                            $parentColumn = $childrenRelation ? $childrenRelation->getForeignKeyName() : null;
+                        } catch (\Throwable $e) {
+                            $parentColumn = null;
+                        }
+
+                        if ($parentColumn) {
+                            if ($parentRecord === null) {
+                                // Became a root node: clear parent_id
+                                $record->{$parentColumn} = null;
+                            } else {
+                                // Ensure correct parent assignment when moved under a different parent
+                                $record->{$parentColumn} = $parentRecord->getKey();
+                            }
+                        }
+                    }
+
                     if ($relationship instanceof BelongsToMany) {
                         $record->save();
                     } else {
@@ -100,6 +123,9 @@ trait HasRelationship
                         }
 
                         $record->{$childrenKey}()->saveMany($childrenRecords);
+                    } else {
+                        // If the record has no children now, we should detach previous children if any are cached and not present.
+                        // This is handled elsewhere during traversal, so nothing to do here.
                     }
 
                     return $record;
